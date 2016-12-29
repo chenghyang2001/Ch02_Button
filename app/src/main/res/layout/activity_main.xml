@@ -13,14 +13,24 @@
         android:textIsSelectable="false"
         android:textSize="30sp" />
 
-    <Button
+       <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="放大"
+        android:text="Turn On Screen"
         android:id="@+id/button"
         android:layout_above="@+id/txv"
         android:layout_centerHorizontal="true"
         android:onClick="bigger"
+        android:nestedScrollingEnabled="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Turn Off Screen"
+        android:id="@+id/button1"
+        android:layout_below="@+id/button"
+        android:layout_centerHorizontal="true"
+        android:onClick="turnoff"
         android:nestedScrollingEnabled="true" />
 
 </RelativeLayout>

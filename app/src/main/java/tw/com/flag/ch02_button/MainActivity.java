@@ -12,6 +12,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        A.a("11111111111111111111111111111111111");
     }
 
     int size=31; //字型大小, 初值 30(sp)
@@ -20,5 +22,12 @@ public class MainActivity extends AppCompatActivity {
         TextView txv;
         txv = (TextView) findViewById(R.id.txv);
         txv.setTextSize(++size);
+        A.a("222222222222222222222222222222222");
+    }
+
+
+    public void turnoff(View v) {
+
+        A.a("3333333333333333333333333333333333");
     }
 }
