@@ -71,6 +71,23 @@ public class MediaRecorderExample extends Activity {
                     mediaRecorder.prepare();
                     mediaRecorder.start();
 
+                    // Peter. Seems only two setOnXXX functions. not find any callback be able to detect MIC volume.
+                    mediaRecorder.setOnErrorListener(new MediaRecorder.OnErrorListener() {
+                        @Override
+                        public void onError(MediaRecorder mr, int what, int extra) {
+                            A.a("111111111111111111111  In  mediaRecorder setOnErrorListener");
+                        }
+                    });
+
+                    mediaRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
+                        @Override
+                        public void onInfo(MediaRecorder mr, int what, int extra) {
+                            A.a("222222222222222222222  In  mediaRecorder setOnInfoListener");
+                        }
+                    });
+
+
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
