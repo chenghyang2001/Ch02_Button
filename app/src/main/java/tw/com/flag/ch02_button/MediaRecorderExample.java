@@ -12,15 +12,17 @@ import android.widget.Toast;
 
 public class MediaRecorderExample extends Activity {
 
-    private Button recoButn = null;
-    private Button stopButn = null;
-    private Button playButn = null;
-    private Button exitButn = null;
+    private Button recoButn             = null;
+    private Button stopButn             = null;
+    private Button playButn             = null;
+    private Button exitButn             = null;
+    private MediaPlayer mediaPlayer     = null;
     private MediaRecorder mediaRecorder = null;
-    private MediaPlayer mediaPlayer = null;
 
     private MediaPlayer.OnPreparedListener prepareListener = new MediaPlayer.OnPreparedListener() {
         public void onPrepared(MediaPlayer player) {
+            A.a("Play Prepared !");
+            Toast.makeText(MediaRecorderExample.this, "Play Prepared !", Toast.LENGTH_LONG).show();
             playButn.setEnabled(true);
         }
     };
@@ -62,31 +64,29 @@ public class MediaRecorderExample extends Activity {
                     playButn.setEnabled(false);
 
                     mediaRecorder = new MediaRecorder();
-
                     mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                     mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
                     mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
                     mediaRecorder.setOutputFile("/sdcard/mytest.3gp");
-
                     mediaRecorder.prepare();
-
                     mediaRecorder.start();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
 
-        // Stop Recording
+        // Stop Button
         stopButn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mediaRecorder != null) {
+                    A.a();
 
                     recoButn.setEnabled(true);
                     stopButn.setEnabled(false);
                     playButn.setEnabled(true);
 
-                    A.a();
                     mediaRecorder.stop();
                     mediaRecorder.release();
                     mediaRecorder = null;
@@ -94,34 +94,32 @@ public class MediaRecorderExample extends Activity {
                     mediaPlayer = new MediaPlayer();
                     try {
                         mediaPlayer.setDataSource("/sdcard/mytest.3gp");
-                    } catch (Exception e) {
-                        A.a();
-                    }
-                    mediaPlayer.setOnPreparedListener(prepareListener);
-                    //
-                    try {
+                        mediaPlayer.setOnPreparedListener(prepareListener);
                         mediaPlayer.prepare();
                     } catch (Exception e) {
                         A.a();
                     }
+
                 }
             }
         });
 
-        // Play recorded file mytest.3gp
+        // Play Button.
         playButn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 A.a();
+
+                playButn.setEnabled(false);
+
+
                 mediaPlayer.setOnCompletionListener(completionListener);
                 mediaPlayer.setVolume(1.0f, 1.0f);
-
                 mediaPlayer.start();
-                playButn.setEnabled(false);
 
             }
         });
 
-        // Exit
+        // Exit Button
         exitButn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 A.a();
