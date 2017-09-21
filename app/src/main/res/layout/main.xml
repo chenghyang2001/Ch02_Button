@@ -27,9 +27,17 @@
         android:id="@+id/playButn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="216dp"
-        android:layout_y="80dp"
+        android:layout_x="211dp"
+        android:layout_y="25dp"
         android:text="Play"></Button>
+
+    <Button
+        android:id="@+id/exitButn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="211dp"
+        android:layout_y="80dp"
+        android:text="Exit"></Button>
 
 
 </AbsoluteLayout>
