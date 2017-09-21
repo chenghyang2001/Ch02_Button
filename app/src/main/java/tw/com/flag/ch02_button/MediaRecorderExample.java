@@ -12,11 +12,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class MediaRecorderExample extends Activity {
-    private Button recordButn;
-    private Button stopButn;
-    private Button playButn;
+
+    private Button recordButn           = null;
+    private Button stopButn             = null;
+    private Button playButn             = null;
     private MediaRecorder mediaRecorder = null;
-    private MediaPlayer mediaPlayer = null ;
+    private MediaPlayer mediaPlayer     = null ;
 
     private MediaPlayer.OnPreparedListener prepareListener=new MediaPlayer.OnPreparedListener() {
         public void onPrepared(MediaPlayer player) {
@@ -35,45 +36,31 @@ public class MediaRecorderExample extends Activity {
     };
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
         recordButn = (Button) findViewById(R.id.recordButn);
-        stopButn = (Button) findViewById(R.id.stopButn);
-        playButn = (Button) findViewById(R.id.playButn);
+        stopButn   = (Button) findViewById(R.id.stopButn);
+        playButn   = (Button) findViewById(R.id.playButn);
 
         //錄音
         recordButn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //設定錄音檔名
-                String fileName = "record.amr";
+
                 try {
-                    File SDCardpath = Environment.getExternalStorageDirectory();
-                    File myDataPath = new File( SDCardpath.getAbsolutePath() + "/download" );
-                    if( !myDataPath.exists() ) myDataPath.mkdirs();
-//                    File recodeFile = new File(SDCardpath.getAbsolutePath() + "/download/"+fileName);
-                    File recodeFile = new File(Environment.getExternalStorageDirectory() + "/mytest.3gp");
 
                     mediaRecorder = new MediaRecorder();
 
-                    //設定音源
                     mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                    //設定輸出檔案的格式
                     mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-//                    mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
-                    //設定編碼格式
                     mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-                    //設定錄音檔位置
-//                    mediaRecorder.setOutputFile( Environment.getExternalStorageDirectory() + "/mytest.3gp");
                     mediaRecorder.setOutputFile("/sdcard/mytest.3gp");
-//                    mediaRecorder.setOutputFile(recodeFile.getAbsolutePath());
 
                     mediaRecorder.prepare();
-                    A.a("path = " + recodeFile.getAbsolutePath());
 
-                    //開始錄音
                     mediaRecorder.start();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -81,7 +68,7 @@ public class MediaRecorderExample extends Activity {
             }
         });
 
-        //停止錄音
+        // Stop Recording
         stopButn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(mediaRecorder != null) {
@@ -89,7 +76,6 @@ public class MediaRecorderExample extends Activity {
                     mediaRecorder.stop();
                     mediaRecorder.release();
                     mediaRecorder = null;
-
 
                     mediaPlayer=new MediaPlayer();
                     try {
@@ -104,12 +90,11 @@ public class MediaRecorderExample extends Activity {
                     }catch (Exception e) {
                         A.a();
                     }
-
-
                 }
             }
         });
 
+        // Play recorded file mytest.3gp
         playButn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 A.a();
