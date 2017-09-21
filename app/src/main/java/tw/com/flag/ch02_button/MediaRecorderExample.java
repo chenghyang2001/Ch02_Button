@@ -53,7 +53,7 @@ public class MediaRecorderExample extends Activity {
         stopButn.setEnabled(false);
         playButn.setEnabled(false);
 
-        // start recording
+        // Record Button
         recoButn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -110,7 +110,6 @@ public class MediaRecorderExample extends Activity {
                 A.a();
 
                 playButn.setEnabled(false);
-
 
                 mediaPlayer.setOnCompletionListener(completionListener);
                 mediaPlayer.setVolume(1.0f, 1.0f);
