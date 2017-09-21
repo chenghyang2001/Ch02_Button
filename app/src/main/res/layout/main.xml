@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout
+    android:id="@+id/widget0"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <Button
+        android:id="@+id/recordButn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="錄音"
+        android:layout_x="68px"
+        android:layout_y="44px"
+        >
+    </Button>
+
+    <Button
+        android:id="@+id/stopButn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="35dp"
+        android:layout_y="81dp"
+        android:text="停止"></Button>
+
+    <Button
+        android:id="@+id/playButn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="216dp"
+        android:layout_y="80dp"
+        android:text="Play"></Button>
+
+
+</AbsoluteLayout>

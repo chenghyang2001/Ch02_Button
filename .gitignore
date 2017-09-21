@@ -13,7 +13,6 @@ vr2a_google_asr.iml
 app/build/*
 app/app.iml
 app/build.gradle
-app/src/main/java/com/wistron/facemodule/__Tag_List__
 app/src/main/java/com/wistron/facemodule/nt*.txt
 *.iml
 
