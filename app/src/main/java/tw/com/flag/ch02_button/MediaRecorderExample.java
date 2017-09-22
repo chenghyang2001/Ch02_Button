@@ -31,7 +31,7 @@ public class MediaRecorderExample extends Activity {
         public void onCompletion(MediaPlayer player) {
             A.a("Play complete !");
             Toast.makeText(MediaRecorderExample.this, "Play complete !", Toast.LENGTH_LONG).show();
-            playButn.setEnabled(true);
+//            playButn.setEnabled(true);
             mediaPlayer.release();
             mediaPlayer = null;
         }
@@ -128,9 +128,12 @@ public class MediaRecorderExample extends Activity {
 
                 playButn.setEnabled(false);
 
-                mediaPlayer.setOnCompletionListener(completionListener);
-                mediaPlayer.setVolume(1.0f, 1.0f);
-                mediaPlayer.start();
+                if ( mediaPlayer != null) {
+                    mediaPlayer.setOnCompletionListener(completionListener);
+                    mediaPlayer.setVolume(1.0f, 1.0f);
+                    mediaPlayer.start();
+                }
+
 
             }
         });
