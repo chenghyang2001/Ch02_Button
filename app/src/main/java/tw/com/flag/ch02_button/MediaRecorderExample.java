@@ -1,6 +1,8 @@
 package tw.com.flag.ch02_button;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
@@ -12,12 +14,13 @@ import android.widget.Toast;
 
 public class MediaRecorderExample extends Activity {
 
-    private Button recoButn             = null;
-    private Button stopButn             = null;
-    private Button playButn             = null;
-    private Button exitButn             = null;
-    private MediaPlayer mediaPlayer     = null;
+    private Button recoButn = null;
+    private Button stopButn = null;
+    private Button playButn = null;
+    private Button exitButn = null;
+    private MediaPlayer mediaPlayer = null;
     private MediaRecorder mediaRecorder = null;
+    Timer timer;
 
     private MediaPlayer.OnPreparedListener prepareListener = new MediaPlayer.OnPreparedListener() {
         public void onPrepared(MediaPlayer player) {
@@ -63,29 +66,23 @@ public class MediaRecorderExample extends Activity {
                     stopButn.setEnabled(true);
                     playButn.setEnabled(false);
 
-                    mediaRecorder = new MediaRecorder();
+
+                    if (mediaRecorder == null) {
+                        mediaRecorder = new MediaRecorder();
+                    }
                     mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                     mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
                     mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
                     mediaRecorder.setOutputFile("/sdcard/mytest.3gp");
+
+                    timer = new Timer();
+                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 500);
+                    mediaRecorder.setOutputFile("/dev/null");
+
                     mediaRecorder.prepare();
                     mediaRecorder.start();
 
-                    // Peter. Seems only two setOnXXX functions. not find any callback be able to detect MIC volume.
-                    mediaRecorder.setOnErrorListener(new MediaRecorder.OnErrorListener() {
-                        @Override
-                        public void onError(MediaRecorder mr, int what, int extra) {
-                            A.a("111111111111111111111  In  mediaRecorder setOnErrorListener");
-                        }
-                    });
-
-                    mediaRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
-                        @Override
-                        public void onInfo(MediaRecorder mr, int what, int extra) {
-                            A.a("222222222222222222222  In  mediaRecorder setOnInfoListener");
-                        }
-                    });
-
+                    A.a();
 
 
                 } catch (IOException e) {
@@ -100,22 +97,25 @@ public class MediaRecorderExample extends Activity {
                 if (mediaRecorder != null) {
                     A.a();
 
-                    recoButn.setEnabled(true);
-                    stopButn.setEnabled(false);
-                    playButn.setEnabled(true);
+                    recoButn.setEnabled(true); A.a();
+                    stopButn.setEnabled(false); A.a();
+                    playButn.setEnabled(true); A.a();
 
-                    mediaRecorder.stop();
-                    mediaRecorder.release();
-                    mediaRecorder = null;
+                    mediaRecorder.stop(); A.a();
+                    mediaRecorder.release(); A.a();
+                    mediaRecorder = null; A.a();
 
-                    mediaPlayer = new MediaPlayer();
-                    try {
-                        mediaPlayer.setDataSource("/sdcard/mytest.3gp");
-                        mediaPlayer.setOnPreparedListener(prepareListener);
-                        mediaPlayer.prepare();
-                    } catch (Exception e) {
-                        A.a();
-                    }
+                    timer.cancel(); A.a();
+
+
+//                    mediaPlayer = new MediaPlayer();
+//                    try {
+//                        mediaPlayer.setDataSource("/sdcard/mytest.3gp");
+//                        mediaPlayer.setOnPreparedListener(prepareListener);
+//                        mediaPlayer.prepare();
+//                    } catch (Exception e) {
+//                        A.a();
+//                    }
 
                 }
             }
@@ -128,7 +128,7 @@ public class MediaRecorderExample extends Activity {
 
                 playButn.setEnabled(false);
 
-                if ( mediaPlayer != null) {
+                if (mediaPlayer != null) {
                     mediaPlayer.setOnCompletionListener(completionListener);
                     mediaPlayer.setVolume(1.0f, 1.0f);
                     mediaPlayer.start();
@@ -148,4 +148,28 @@ public class MediaRecorderExample extends Activity {
         });
 
     }
+
+    private class RecorderTask extends TimerTask {
+
+        private MediaRecorder recorder = null ;
+
+        public RecorderTask(MediaRecorder recorder) {
+            this.recorder = recorder;
+            A.a();
+        }
+
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if ( recorder != null ) {
+                        int amplitude = recorder.getMaxAmplitude();
+                        double amplitudeDb = 20 * Math.log10((double) Math.abs(amplitude));
+                        A.a("amplitudeDb = " + amplitudeDb);
+                    }
+                }
+            });
+        }
+    }
+
 }
