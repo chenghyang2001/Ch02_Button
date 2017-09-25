@@ -1,6 +1,9 @@
 package tw.com.flag.ch02_button;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,29 +19,12 @@ public class MediaRecorderExample extends Activity {
 
     private Button recoButn = null;
     private Button stopButn = null;
-    private Button playButn = null;
     private Button exitButn = null;
     private MediaPlayer mediaPlayer = null;
     private MediaRecorder mediaRecorder = null;
     Timer timer;
+    LimitedSizeQueue<Integer> queueVolume = new LimitedSizeQueue<Integer>(4);
 
-    private MediaPlayer.OnPreparedListener prepareListener = new MediaPlayer.OnPreparedListener() {
-        public void onPrepared(MediaPlayer player) {
-            A.a("Play Prepared !");
-            Toast.makeText(MediaRecorderExample.this, "Play Prepared !", Toast.LENGTH_LONG).show();
-            playButn.setEnabled(true);
-        }
-    };
-
-    private MediaPlayer.OnCompletionListener completionListener = new MediaPlayer.OnCompletionListener() {
-        public void onCompletion(MediaPlayer player) {
-            A.a("Play complete !");
-            Toast.makeText(MediaRecorderExample.this, "Play complete !", Toast.LENGTH_LONG).show();
-//            playButn.setEnabled(true);
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-    };
 
 
     @Override
@@ -47,14 +33,17 @@ public class MediaRecorderExample extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        queueVolume.add(0);
+        queueVolume.add(0);
+        queueVolume.add(0);
+        queueVolume.add(0);
+
         recoButn = (Button) findViewById(R.id.recordButn);
         stopButn = (Button) findViewById(R.id.stopButn);
-        playButn = (Button) findViewById(R.id.playButn);
         exitButn = (Button) findViewById(R.id.exitButn);
 
         recoButn.setEnabled(true);
         stopButn.setEnabled(false);
-        playButn.setEnabled(false);
 
         // Record Button
         recoButn.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +53,6 @@ public class MediaRecorderExample extends Activity {
 
                     recoButn.setEnabled(false);
                     stopButn.setEnabled(true);
-                    playButn.setEnabled(false);
 
 
                     if (mediaRecorder == null) {
@@ -76,7 +64,8 @@ public class MediaRecorderExample extends Activity {
                     mediaRecorder.setOutputFile("/sdcard/mytest.3gp");
 
                     timer = new Timer();
-                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 500);
+                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 100);
+//                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 500);
                     mediaRecorder.setOutputFile("/dev/null");
 
                     mediaRecorder.prepare();
@@ -97,17 +86,20 @@ public class MediaRecorderExample extends Activity {
                 if (mediaRecorder != null) {
                     A.a();
 
-                    timer.cancel(); A.a();
+                    timer.cancel();
+                    A.a();
 
-                    recoButn.setEnabled(true); A.a();
-                    stopButn.setEnabled(false); A.a();
-                    playButn.setEnabled(true); A.a();
+                    recoButn.setEnabled(true);
+                    A.a();
+                    stopButn.setEnabled(false);
+                    A.a();
 
-                    mediaRecorder.stop(); A.a();
-                    mediaRecorder.release(); A.a();
-                    mediaRecorder = null; A.a();
-
-
+                    mediaRecorder.stop();
+                    A.a();
+                    mediaRecorder.release();
+                    A.a();
+                    mediaRecorder = null;
+                    A.a();
 
 
 //                    mediaPlayer = new MediaPlayer();
@@ -123,22 +115,6 @@ public class MediaRecorderExample extends Activity {
             }
         });
 
-        // Play Button.
-        playButn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                A.a();
-
-                playButn.setEnabled(false);
-
-                if (mediaPlayer != null) {
-                    mediaPlayer.setOnCompletionListener(completionListener);
-                    mediaPlayer.setVolume(1.0f, 1.0f);
-                    mediaPlayer.start();
-                }
-
-
-            }
-        });
 
         // Exit Button
         exitButn.setOnClickListener(new View.OnClickListener() {
@@ -149,11 +125,16 @@ public class MediaRecorderExample extends Activity {
             }
         });
 
+
+        // test Queue >>
+//        testQueue();
+        // test Queue <<
+
     }
 
-    private class RecorderTask extends TimerTask {
+    public class RecorderTask extends TimerTask {
 
-        private MediaRecorder recorder = null ;
+        private MediaRecorder recorder = null;
 
         public RecorderTask(MediaRecorder recorder) {
             this.recorder = recorder;
@@ -164,14 +145,101 @@ public class MediaRecorderExample extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if ( recorder != null ) {
+                    if (recorder != null) {
                         int amplitude = recorder.getMaxAmplitude();
                         double amplitudeDb = 20 * Math.log10((double) Math.abs(amplitude));
-                        A.a("amplitudeDb = " + amplitudeDb);
+                        int intDb = (int) amplitudeDb;
+                        queueVolume.add(intDb);
+//                        queueVolume.display();
+
+//                        A.a( " isVolume Large = " + queueVolume.isVolumeLarge() )  ;
+
+
+
+                        if (queueVolume.isVolumeLarge() == true) {
+
+                            A.a( "xxxxxx.    isVolumeLarge = true" );
+                        }
+
+//                        A.a("amplitudeDb = " + amplitudeDb);
+
+
                     }
                 }
             });
         }
     }
+
+    public class LimitedSizeQueue<K> extends ArrayList<K> {
+
+        private int maxSize;
+
+        public LimitedSizeQueue(int size){
+            this.maxSize = size;
+        }
+
+        public boolean add(K k){
+            boolean r = super.add(k);
+            if (size() > maxSize){
+                removeRange(0,1);
+            }
+            return r;
+        }
+
+        public boolean isVolumeLarge() {
+            boolean r = true ;
+            int v = 0 ;
+            for ( int i = 0 ; i < maxSize ; i++ ) {
+                  v = (Integer) get(i);
+                 if ( v < 50 ) {
+                     r = false;
+                     break;
+                 }
+            }
+            return r ;
+        }
+
+        public void display ( ) {
+            int i = 0 ;
+            StringBuilder builder = new StringBuilder();
+            for ( i = 0 ; i < maxSize ; i++ ) {
+                builder.append("  " + get(i) );
+            }
+            A.a(  "builder= " + builder.toString() );
+        }
+
+        public K getYongest() {
+            return get(size() - 1);
+        }
+
+        public K getOldest() {
+            return get(0);
+        }
+    }
+
+
+
+    private void testQueue() {
+        LimitedSizeQueue<Integer> queueNames = new LimitedSizeQueue<Integer>(3);
+        queueNames.add(10);
+        queueNames.add(20);
+        queueNames.add(30);
+
+
+        for (int i :queueNames) {
+            A.a( " i = " + i ) ;
+        }
+
+        queueNames.add(40);
+        for (int i :queueNames) {
+            A.a( " i = " + i ) ;
+        }
+
+        queueNames.add(50);
+        for (int i :queueNames) {
+            A.a( " i = " + i ) ;
+        }
+    }
+
 
 }
