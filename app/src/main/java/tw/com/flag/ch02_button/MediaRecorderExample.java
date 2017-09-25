@@ -97,6 +97,8 @@ public class MediaRecorderExample extends Activity {
                 if (mediaRecorder != null) {
                     A.a();
 
+                    timer.cancel(); A.a();
+
                     recoButn.setEnabled(true); A.a();
                     stopButn.setEnabled(false); A.a();
                     playButn.setEnabled(true); A.a();
@@ -105,7 +107,7 @@ public class MediaRecorderExample extends Activity {
                     mediaRecorder.release(); A.a();
                     mediaRecorder = null; A.a();
 
-                    timer.cancel(); A.a();
+
 
 
 //                    mediaPlayer = new MediaPlayer();
