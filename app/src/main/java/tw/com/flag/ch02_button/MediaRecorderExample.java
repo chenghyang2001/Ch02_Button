@@ -1,30 +1,27 @@
 package tw.com.flag.ch02_button;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MediaRecorderExample extends Activity {
 
-    private Button recoButn = null;
-    private Button stopButn = null;
-    private Button exitButn = null;
-    private MediaPlayer mediaPlayer = null;
-    private MediaRecorder mediaRecorder = null;
-    Timer timer;
+    private Button recoButn               = null;
+    private Button stopButn               = null;
+    private Button exitButn               = null;
+    private MediaPlayer mediaPlayer       = null;
+    private MediaRecorder mediaRecorder   = null;
+            Timer                   timer = null ;
     LimitedSizeQueue<Integer> queueVolume = new LimitedSizeQueue<Integer>(4);
-
 
 
     @Override
@@ -86,32 +83,14 @@ public class MediaRecorderExample extends Activity {
         stopButn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mediaRecorder != null) {
-                    A.a();
 
                     timer.cancel();
-                    A.a();
 
                     recoButn.setEnabled(true);
-                    A.a();
                     stopButn.setEnabled(false);
-                    A.a();
-
                     mediaRecorder.stop();
-                    A.a();
                     mediaRecorder.release();
-                    A.a();
                     mediaRecorder = null;
-                    A.a();
-
-
-//                    mediaPlayer = new MediaPlayer();
-//                    try {
-//                        mediaPlayer.setDataSource("/sdcard/mytest.3gp");
-//                        mediaPlayer.setOnPreparedListener(prepareListener);
-//                        mediaPlayer.prepare();
-//                    } catch (Exception e) {
-//                        A.a();
-//                    }
 
                 }
             }
@@ -128,9 +107,23 @@ public class MediaRecorderExample extends Activity {
         });
 
 
-        // test Queue >>
-//        testQueue();
-        // test Queue <<
+    }
+
+    public void startService(View view) {
+
+        if (MyService.serviceRunning == false) {
+            Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
+            startService(intent);
+        }
+
+    }
+
+    public void stopService(View view) {
+
+        if ( MyService.serviceRunning == true ) {
+            Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
+            stopService(intent);
+        }
 
     }
 
@@ -148,22 +141,31 @@ public class MediaRecorderExample extends Activity {
                 @Override
                 public void run() {
                     if (recorder != null) {
-                        int amplitude = recorder.getMaxAmplitude();
+
+                        int      amplitude = recorder.getMaxAmplitude();
                         double amplitudeDb = 20 * Math.log10((double) Math.abs(amplitude));
-                        int intDb = (int) amplitudeDb;
+                        int          intDb = (int) amplitudeDb;
+
                         queueVolume.add(intDb);
 //                        queueVolume.display();
-
 //                        A.a( " isVolume Large = " + queueVolume.isVolumeLarge() )  ;
+//                        A.a("amplitudeDb = " + amplitudeDb);
 
+                        if ((queueVolume.isVolumeLarge() == true) && (MyService.serviceRunning == false) ) {
 
-
-                        if (queueVolume.isVolumeLarge() == true) {
-
-                            A.a( "xxxxxx.    isVolumeLarge = true" );
+                            A.a("1.    isVolumeLarge = true");
+                            Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
+                            startService(intent);
                         }
 
-//                        A.a("amplitudeDb = " + amplitudeDb);
+//                        if ((queueVolume.isVolumeLarge() == false) && (MyService.serviceRunning == true) ) {
+//
+//                            A.a("2.    isVolumeLarge = false");
+//                            Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
+//                            stopService(intent);
+//                        }
+
+
 
 
                     }
@@ -176,38 +178,38 @@ public class MediaRecorderExample extends Activity {
 
         private int maxSize;
 
-        public LimitedSizeQueue(int size){
+        public LimitedSizeQueue(int size) {
             this.maxSize = size;
         }
 
-        public boolean add(K k){
+        public boolean add(K k) {
             boolean r = super.add(k);
-            if (size() > maxSize){
-                removeRange(0,1);
+            if (size() > maxSize) {
+                removeRange(0, 1);
             }
             return r;
         }
 
         public boolean isVolumeLarge() {
-            boolean r = true ;
-            int v = 0 ;
-            for ( int i = 0 ; i < maxSize ; i++ ) {
-                  v = (Integer) get(i);
-                 if ( v < 50 ) {
-                     r = false;
-                     break;
-                 }
+            boolean r = true;
+            int v = 0;
+            for (int i = 0; i < maxSize; i++) {
+                v = (Integer) get(i);
+                if (v < 50) {
+                    r = false;
+                    break;
+                }
             }
-            return r ;
+            return r;
         }
 
-        public void display ( ) {
-            int i = 0 ;
+        public void display() {
+            int i = 0;
             StringBuilder builder = new StringBuilder();
-            for ( i = 0 ; i < maxSize ; i++ ) {
-                builder.append("  " + get(i) );
+            for (i = 0; i < maxSize; i++) {
+                builder.append("  " + get(i));
             }
-            A.a(  "builder= " + builder.toString() );
+            A.a("builder= " + builder.toString());
         }
 
         public K getYongest() {
@@ -220,26 +222,25 @@ public class MediaRecorderExample extends Activity {
     }
 
 
-
     private void testQueue() {
+
         LimitedSizeQueue<Integer> queueNames = new LimitedSizeQueue<Integer>(3);
         queueNames.add(10);
         queueNames.add(20);
         queueNames.add(30);
 
-
-        for (int i :queueNames) {
-            A.a( " i = " + i ) ;
+        for (int i : queueNames) {
+            A.a(" i = " + i);
         }
 
         queueNames.add(40);
-        for (int i :queueNames) {
-            A.a( " i = " + i ) ;
+        for (int i : queueNames) {
+            A.a(" i = " + i);
         }
 
         queueNames.add(50);
-        for (int i :queueNames) {
-            A.a( " i = " + i ) ;
+        for (int i : queueNames) {
+            A.a(" i = " + i);
         }
     }
 
