@@ -64,7 +64,9 @@ public class MediaRecorderExample extends Activity {
                     mediaRecorder.setOutputFile("/sdcard/mytest.3gp");
 
                     timer = new Timer();
-                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 100);
+                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 20);
+//                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 50);
+//                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 100);
 //                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 500);
                     mediaRecorder.setOutputFile("/dev/null");
 
