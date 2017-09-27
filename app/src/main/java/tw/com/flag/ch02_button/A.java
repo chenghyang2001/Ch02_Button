@@ -10,7 +10,7 @@ public class A {
                 " [line = " + String.format("%5d", new Throwable().getStackTrace()[1].getLineNumber()) + "]" +
                         " file = " + new Throwable().getStackTrace()[1].getFileName() +
                         " [method = " + new Throwable().getStackTrace()[1].getMethodName() + " ]" +
-                        " [Ch16_iTankLed NX Rear Device pandora xxx] "
+                        " [ xxx] "
         );
 
     }
@@ -21,7 +21,7 @@ public class A {
                         " file = " + new Throwable().getStackTrace()[1].getFileName() +
                         " [method = " + new Throwable().getStackTrace()[1].getMethodName() + " ]" +
                         " [ " + str + " ]" +
-                        " [Ch16_iTankLed NX Rear Device pandora xxx] "
+                        " [ xxx] "
         );
 
     }

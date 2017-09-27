@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -61,8 +62,8 @@ public class MediaRecorderExample extends Activity {
                     mediaRecorder.setOutputFile("/sdcard/mytest.3gp");
 
                     timer = new Timer();
-                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 20);
-//                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 50);
+//                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 20);
+                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 50);
 //                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 100);
 //                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 500);
                     mediaRecorder.setOutputFile("/dev/null");
@@ -109,15 +110,22 @@ public class MediaRecorderExample extends Activity {
 
     }
 
+    // Start Service Button Event Handler
     public void startService(View view) {
 
-        if (MyService.serviceRunning == false) {
-            Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
-            startService(intent);
-        }
+        MyAsyncTask task = new MyAsyncTask();
+        task.execute("String 1" ); A.a();
+
+//        if (MyService.serviceRunning == false) {
+//            Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
+//            startService(intent);
+//        }
+//
+
 
     }
 
+    // Stop Service Button Event Handler
     public void stopService(View view) {
 
         if ( MyService.serviceRunning == true ) {
@@ -153,26 +161,33 @@ public class MediaRecorderExample extends Activity {
 
                         if ((queueVolume.isVolumeLarge() == true) && (MyService.serviceRunning == false) ) {
 
-                            A.a("1.    isVolumeLarge = true");
-                            Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
-                            startService(intent);
-                        }
+                            A.a("111.    isVolumeLarge = true");
+                            timer.cancel();
 
-//                        if ((queueVolume.isVolumeLarge() == false) && (MyService.serviceRunning == true) ) {
+                            if (mediaRecorder != null) {
+
+                                mediaRecorder.stop();
+                                mediaRecorder.release();
+                                mediaRecorder = null;
+
+                            }
+
+                            MyAsyncTask task = new MyAsyncTask();
+                            task.execute("String 1" ); A.a();
+
+//                            if (MyService.serviceRunning == false) {
+//                                Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
+//                                startService(intent);
+//                            }
 //
-//                            A.a("2.    isVolumeLarge = false");
-//                            Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
-//                            stopService(intent);
-//                        }
 
-
-
-
+                        }
                     }
                 }
             });
         }
     }
+
 
     public class LimitedSizeQueue<K> extends ArrayList<K> {
 
@@ -243,6 +258,32 @@ public class MediaRecorderExample extends Activity {
             A.a(" i = " + i);
         }
     }
+    private void stopMyService() {
+        if ((queueVolume.isVolumeLarge() == false) && (MyService.serviceRunning == true) ) {
 
+            A.a("2.    isVolumeLarge = false");
+            Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
+            stopService(intent);
+        }
+    }
+
+    private class MyAsyncTask extends AsyncTask<String, String, Void> {
+        @Override
+        protected Void doInBackground(String... strings) {
+            A.a("strings length =" + strings.length );
+
+            if (MyService.serviceRunning == false) {
+                Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
+                startService(intent);
+            }
+
+
+            return null;
+        }
+
+
+
+
+    }
 
 }
