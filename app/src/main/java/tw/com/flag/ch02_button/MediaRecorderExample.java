@@ -145,6 +145,9 @@ public class MediaRecorderExample extends Activity {
     public class RecorderTask extends TimerTask {
 
         private MediaRecorder recorder = null;
+        private int amplitude = 0;
+        private double amplitudeDb = 0;
+        private int intDb = 0;
 
         public RecorderTask(MediaRecorder recorder) {
             A.a();
@@ -157,28 +160,29 @@ public class MediaRecorderExample extends Activity {
                 @Override
                 public void run() {
                     if (recorder != null) {
-                        int      amplitude =  recorder.getMaxAmplitude();
-                        double amplitudeDb =  20 * Math.log10((double) Math.abs(amplitude));
-                        int          intDb = (int) amplitudeDb;
-
+                        amplitude   = recorder.getMaxAmplitude();
+                        amplitudeDb = 20 * Math.log10((double) Math.abs(amplitude));
+                        intDb       = (int) amplitudeDb;
                         queueVolume.add(intDb);
-//                        queueVolume.display();
-//                        A.a( " isVolume Large = " + queueVolume.isVolumeLarge() )  ;
-//                        A.a("amplitudeDb = " + amplitudeDb);
 
                         if ((queueVolume.isVolumeLarge() == true) && (MyService.serviceRunning == false)) {
-
-                            A.a("111.    isVolumeLarge = true");
+                            A.a();
+                            // stop timer and release microphone resource
                             timer.cancel();
-
                             if (mediaRecorder != null) {
                                 mediaRecorder.stop();
                                 mediaRecorder.release();
                                 mediaRecorder = null;
                             }
-                            MyAsyncTask task = new MyAsyncTask();
-                            task.execute("String 1");
-                            A.a();
+
+                            if (MyService.serviceRunning == false) {
+                                Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
+                                startService(intent);
+                            }
+
+//                            MyAsyncTask task = new MyAsyncTask();
+//                            task.execute("String 1");
+//                            A.a();
                         }
                     } else {
                         A.a("Media Recorder is null ");
