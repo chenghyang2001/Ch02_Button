@@ -14,8 +14,8 @@ import java.util.Date;
 
 public class MyService extends Service {
 
-    public static Boolean serviceRunning = false;
-    protected 			RecognitionListener   	mSpeechRecognizerListner	= null  ;  // }}}
+    public static                  Boolean      serviceRunning              = false;
+    protected 			RecognitionListener   	mSpeechRecognizerListner	= null  ;
     public 				boolean 				receiveErrorLock 			= false ;
     protected           SpeechRecognizer 		speechRecognizer 			= null  ;
     protected           Intent  				recognizerIntent 			= null  ;
@@ -24,8 +24,6 @@ public class MyService extends Service {
     public MyService() {
         A.a();
     }
-
-    private Handler handler = new Handler();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -37,7 +35,6 @@ public class MyService extends Service {
     public void onStart(Intent intent, int startId) {
         A.a();
         serviceRunning = true;
-//        handler.postDelayed(showTime, 1000);
 
         if ( ( speechRecognizer == null ) && ( recognizerIntent == null  )) {
             initASR();
@@ -51,23 +48,13 @@ public class MyService extends Service {
     public void onDestroy() {
         A.a();
         serviceRunning = false;
-        handler.removeCallbacks(showTime);
 
         if ( (speechRecognizer != null) && (recognizerIntent != null) ) {
             DestoryGoogleASR();
         }
-
-
         super.onDestroy();
     }
 
-    private Runnable showTime = new Runnable() {
-        public void run() {
-//            Log.i("time:", new Date().toString());
-            A.a("time:" + new Date().toString() );
-            handler.postDelayed(this, 1000);
-        }
-    };
 
     private RecognitionListener getSpeechRecognizerListner() {  // A.a(); // {{{
 
