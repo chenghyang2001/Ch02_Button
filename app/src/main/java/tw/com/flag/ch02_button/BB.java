@@ -37,10 +37,10 @@ public class BB {
 //    }
 
 //    private void stopMyService() {
-//        if ((queueVolume.isVolumeLarge() == false) && (MyService.serviceRunning == true)) {
+//        if ((queueVolume.isVolumeLarge() == false) && (MyASRService.serviceRunning == true)) {
 //
 //            A.a("2.    isVolumeLarge = false");
-//            Intent intent = new Intent(RecorderActivity.this, MyService.class);
+//            Intent intent = new Intent(RecorderActivity.this, MyASRService.class);
 //            stopService(intent);
 //        }
 //    }
@@ -50,8 +50,8 @@ public class BB {
 
 
 
-//        if (MyService.serviceRunning == false) {
-//            Intent intent = new Intent(RecorderActivity.this, MyService.class);
+//        if (MyASRService.serviceRunning == false) {
+//            Intent intent = new Intent(RecorderActivity.this, MyASRService.class);
 //            startService(intent);
 //        }
 
@@ -62,8 +62,8 @@ public class BB {
     // Stop Service Button Event Handler
     public void stopService(View view) {
 
-//        if (MyService.serviceRunning == true) {
-//            Intent intent = new Intent(RecorderActivity.this, MyService.class);
+//        if (MyASRService.serviceRunning == true) {
+//            Intent intent = new Intent(RecorderActivity.this, MyASRService.class);
 //            stopService(intent);
 //        }
 

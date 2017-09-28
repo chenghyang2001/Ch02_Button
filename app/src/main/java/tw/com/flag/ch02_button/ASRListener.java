@@ -12,10 +12,10 @@ import java.util.List;
  */
 class ASRListener implements RecognitionListener {   // {{{
 
-    private MyService parentService = null ;
+    private MyASRService parentService = null ;
 
 
-    public ASRListener(MyService asrservice) {
+    public ASRListener(MyASRService asrservice) {
         this.parentService = asrservice;
     }
 

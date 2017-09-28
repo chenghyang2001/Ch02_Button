@@ -190,7 +190,7 @@ public class MyAudioService extends Service {
                 intDb = (int) amplitudeDb;
                 queueVolume.add(intDb);
 
-                if ((queueVolume.isVolumeLarge() == true) && (MyService.serviceRunning == false)) {
+                if ((queueVolume.isVolumeLarge() == true) && (MyASRService.serviceRunning == false)) {
                     A.a();
                     // stop timer and release microphone resource
                     timer.cancel();
@@ -200,8 +200,8 @@ public class MyAudioService extends Service {
                         mediaRecorder = null;
                     }
 
-                    if (MyService.serviceRunning == false) {
-                        Intent intent = new Intent(MyAudioService.this, MyService.class);
+                    if (MyASRService.serviceRunning == false) {
+                        Intent intent = new Intent(MyAudioService.this, MyASRService.class);
                         startService(intent);
                     }
 

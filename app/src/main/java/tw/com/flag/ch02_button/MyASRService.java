@@ -12,7 +12,7 @@ import android.util.Log;
 
 import java.util.Date;
 
-public class MyService extends Service {
+public class MyASRService extends Service {
 
     public static                  Boolean      serviceRunning              = false;
     protected 			RecognitionListener   	mSpeechRecognizerListner	= null  ;
@@ -21,7 +21,7 @@ public class MyService extends Service {
     protected           Intent  				recognizerIntent 			= null  ;
 
 
-    public MyService() {
+    public MyASRService() {
         A.a();
     }
 
