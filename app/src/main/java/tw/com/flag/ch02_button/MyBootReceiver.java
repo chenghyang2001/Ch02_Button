@@ -11,7 +11,7 @@ public class MyBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        A.a("33 Action: " + intent.getAction());
+        A.a("44 Action: " + intent.getAction());
 
         m_context = context ;
         Intent it = new Intent(context, MyAudioService.class);
