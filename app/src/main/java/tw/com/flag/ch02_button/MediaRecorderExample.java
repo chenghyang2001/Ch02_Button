@@ -18,12 +18,12 @@ import java.util.TimerTask;
 
 public class MediaRecorderExample extends Activity {
 
-    private Button recoButn               = null;
-    private Button stopButn               = null;
-    private Button exitButn               = null;
-    private MediaPlayer mediaPlayer       = null;
-    private MediaRecorder mediaRecorder   = null;
-            Timer                   timer = null ;
+    private Button recoButn = null;
+    private Button stopButn = null;
+    private Button exitButn = null;
+    private MediaPlayer mediaPlayer = null;
+    private MediaRecorder mediaRecorder = null;
+    Timer timer = null;
     LimitedSizeQueue<Integer> queueVolume = new LimitedSizeQueue<Integer>(4);
 
 
@@ -33,17 +33,34 @@ public class MediaRecorderExample extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        // init queue
         queueVolume.add(0);
         queueVolume.add(0);
         queueVolume.add(0);
         queueVolume.add(0);
 
+        // init UI component
         recoButn = (Button) findViewById(R.id.recordButn);
         stopButn = (Button) findViewById(R.id.stopButn);
         exitButn = (Button) findViewById(R.id.exitButn);
-
         recoButn.setEnabled(true);
         stopButn.setEnabled(false);
+
+        // init timer
+        if (timer == null) {
+            timer = new Timer();
+        }
+
+
+        // init mediaRecorder
+        if (mediaRecorder == null) {
+            mediaRecorder = new MediaRecorder();
+        }
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mediaRecorder.setOutputFile("/dev/null");
+
 
         // Record Button
         recoButn.setOnClickListener(new View.OnClickListener() {
@@ -54,21 +71,8 @@ public class MediaRecorderExample extends Activity {
                     recoButn.setEnabled(false);
                     stopButn.setEnabled(true);
 
-
-                    if (mediaRecorder == null) {
-                        mediaRecorder = new MediaRecorder();
-                    }
-                    mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                    mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                    mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-                    mediaRecorder.setOutputFile("/sdcard/mytest.3gp");
-
-                    timer = new Timer();
-//                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 20);
+                    // start timer interval task
                     timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 50);
-//                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 100);
-//                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 500);
-                    mediaRecorder.setOutputFile("/dev/null");
 
                     mediaRecorder.prepare();
                     mediaRecorder.start();
@@ -116,7 +120,8 @@ public class MediaRecorderExample extends Activity {
     public void startService(View view) {
 
         MyAsyncTask task = new MyAsyncTask();
-        task.execute("String 1" ); A.a();
+        task.execute("String 1");
+        A.a();
 
 //        if (MyService.serviceRunning == false) {
 //            Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
@@ -130,7 +135,7 @@ public class MediaRecorderExample extends Activity {
     // Stop Service Button Event Handler
     public void stopService(View view) {
 
-        if ( MyService.serviceRunning == true ) {
+        if (MyService.serviceRunning == true) {
             Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
             stopService(intent);
         }
@@ -142,18 +147,18 @@ public class MediaRecorderExample extends Activity {
         private MediaRecorder recorder = null;
 
         public RecorderTask(MediaRecorder recorder) {
-            this.recorder = recorder;
             A.a();
+            this.recorder = recorder;
         }
 
         public void run() {
             runOnUiThread(new Runnable() {
+
                 @Override
                 public void run() {
                     if (recorder != null) {
-
-                        int      amplitude = recorder.getMaxAmplitude();
-                        double amplitudeDb = 20 * Math.log10((double) Math.abs(amplitude));
+                        int      amplitude =  recorder.getMaxAmplitude();
+                        double amplitudeDb =  20 * Math.log10((double) Math.abs(amplitude));
                         int          intDb = (int) amplitudeDb;
 
                         queueVolume.add(intDb);
@@ -161,29 +166,22 @@ public class MediaRecorderExample extends Activity {
 //                        A.a( " isVolume Large = " + queueVolume.isVolumeLarge() )  ;
 //                        A.a("amplitudeDb = " + amplitudeDb);
 
-                        if ((queueVolume.isVolumeLarge() == true) && (MyService.serviceRunning == false) ) {
+                        if ((queueVolume.isVolumeLarge() == true) && (MyService.serviceRunning == false)) {
 
                             A.a("111.    isVolumeLarge = true");
                             timer.cancel();
 
                             if (mediaRecorder != null) {
-
                                 mediaRecorder.stop();
                                 mediaRecorder.release();
                                 mediaRecorder = null;
-
                             }
-
                             MyAsyncTask task = new MyAsyncTask();
-                            task.execute("String 1" ); A.a();
-
-//                            if (MyService.serviceRunning == false) {
-//                                Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
-//                                startService(intent);
-//                            }
-//
-
+                            task.execute("String 1");
+                            A.a();
                         }
+                    } else {
+                        A.a("Media Recorder is null ");
                     }
                 }
             });
@@ -260,8 +258,9 @@ public class MediaRecorderExample extends Activity {
             A.a(" i = " + i);
         }
     }
+
     private void stopMyService() {
-        if ((queueVolume.isVolumeLarge() == false) && (MyService.serviceRunning == true) ) {
+        if ((queueVolume.isVolumeLarge() == false) && (MyService.serviceRunning == true)) {
 
             A.a("2.    isVolumeLarge = false");
             Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
@@ -272,7 +271,7 @@ public class MediaRecorderExample extends Activity {
     private class MyAsyncTask extends AsyncTask<String, String, Void> {
         @Override
         protected Void doInBackground(String... strings) {
-            A.a("strings length =" + strings.length );
+            A.a("strings length =" + strings.length);
 
             if (MyService.serviceRunning == false) {
                 Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
@@ -282,8 +281,6 @@ public class MediaRecorderExample extends Activity {
 
             return null;
         }
-
-
 
 
     }
