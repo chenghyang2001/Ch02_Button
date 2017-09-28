@@ -1,23 +1,13 @@
 package tw.com.flag.ch02_button;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.Button;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
-public class MediaRecorderExample extends Activity {
+public class RecorderActivity extends Activity {
 
     private Button recoButn = null;
     private Button stopButn = null;
