@@ -16,7 +16,7 @@ public class BB {
 
 //    private void testQueue() {
 //
-//        MediaRecorderExample.MyQueue<Integer> queueNames = new MediaRecorderExample.MyQueue<Integer>(3);
+//        RecorderActivity.MyQueue2<Integer> queueNames = new RecorderActivity.MyQueue2<Integer>(3);
 //        queueNames.add(10);
 //        queueNames.add(20);
 //        queueNames.add(30);
@@ -40,7 +40,7 @@ public class BB {
 //        if ((queueVolume.isVolumeLarge() == false) && (MyService.serviceRunning == true)) {
 //
 //            A.a("2.    isVolumeLarge = false");
-//            Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
+//            Intent intent = new Intent(RecorderActivity.this, MyService.class);
 //            stopService(intent);
 //        }
 //    }
@@ -51,7 +51,7 @@ public class BB {
 
 
 //        if (MyService.serviceRunning == false) {
-//            Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
+//            Intent intent = new Intent(RecorderActivity.this, MyService.class);
 //            startService(intent);
 //        }
 
@@ -63,7 +63,7 @@ public class BB {
     public void stopService(View view) {
 
 //        if (MyService.serviceRunning == true) {
-//            Intent intent = new Intent(MediaRecorderExample.this, MyService.class);
+//            Intent intent = new Intent(RecorderActivity.this, MyService.class);
 //            stopService(intent);
 //        }
 

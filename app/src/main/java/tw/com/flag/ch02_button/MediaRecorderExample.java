@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.Button;
 
@@ -21,8 +23,11 @@ public class MediaRecorderExample extends Activity {
     private Button stopButn = null;
     private Button exitButn = null;
     private MediaRecorder mediaRecorder = null;
+
     private Timer timer = null;
     private MyQueue<Integer> queueVolume = new MyQueue<Integer>(4);
+    Context mContext = null ;
+
 
 
     @Override
@@ -31,18 +36,21 @@ public class MediaRecorderExample extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        // init queue
-        queueVolume.add(0);
-        queueVolume.add(0);
-        queueVolume.add(0);
-        queueVolume.add(0);
-
         // init UI component
         recoButn = (Button) findViewById(R.id.recordButn);
         stopButn = (Button) findViewById(R.id.stopButn);
         exitButn = (Button) findViewById(R.id.exitButn);
         recoButn.setEnabled(true);
         stopButn.setEnabled(false);
+
+        mContext = getApplicationContext();
+
+
+        // init queue
+        queueVolume.add(0);
+        queueVolume.add(0);
+        queueVolume.add(0);
+        queueVolume.add(0);
 
         // init timer
         if (timer == null) {
@@ -60,24 +68,30 @@ public class MediaRecorderExample extends Activity {
         mediaRecorder.setOutputFile("/dev/null");
 
 
+        A.a();
+
         // Record Button
         recoButn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                try {
+//                try {
                     // adjust UI
                     recoButn.setEnabled(false);
                     stopButn.setEnabled(true);
 
-                    // start timer interval task
-                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 50);
-                    //
-                    mediaRecorder.prepare();
-                    mediaRecorder.start();
+                    Intent it = new Intent(mContext, MyAudioService.class);
+                    mContext.startService(it);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                    // start timer interval task
+//                    timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 50);
+//                    //
+//                    mediaRecorder.prepare();
+//                    mediaRecorder.start();
+
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
             }
         });
 
@@ -85,13 +99,17 @@ public class MediaRecorderExample extends Activity {
         stopButn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mediaRecorder != null) {
-                    // stop timer
-                    timer.cancel();
 
-                    // release media recorder resource
-                    mediaRecorder.stop();
-                    mediaRecorder.release();
-                    mediaRecorder = null;
+                    Intent it = new Intent(mContext, MyAudioService.class);
+                    mContext.stopService(it);
+
+//                    // stop timer
+//                    timer.cancel();
+//
+//                    // release media recorder resource
+//                    mediaRecorder.stop();
+//                    mediaRecorder.release();
+//                    mediaRecorder = null;
 
                     // adjust UI
                     recoButn.setEnabled(true);
@@ -114,6 +132,11 @@ public class MediaRecorderExample extends Activity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+    }
 
     public class RecorderTask extends TimerTask {
 
@@ -206,15 +229,9 @@ public class MediaRecorderExample extends Activity {
 
         public K getOldest() {
             return get(0);
-        }
+       }
     }
 
-    public static class MyReceiver extends BroadcastReceiver {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            A.a("Action: " + intent.getAction());
-        }
-    }
 
 }
