@@ -12,7 +12,7 @@ import java.util.List;
  */
 class ASRListener implements RecognitionListener {   // {{{
 
-    private MyASRService parentService = null ;
+    private MyASRService parentService = null;
 
 
     public ASRListener(MyASRService asrservice) {
@@ -21,14 +21,14 @@ class ASRListener implements RecognitionListener {   // {{{
 
 
     @Override
-    public void onReadyForSpeech(Bundle bundle) {  
-	A.a();
+    public void onReadyForSpeech(Bundle bundle) {
+        A.a();
         parentService.receiveErrorLock = false;
     }
 
     @Override
-    public void onBeginningOfSpeech() {   
-	A.a();
+    public void onBeginningOfSpeech() {
+        A.a();
     }
 
     @Override
@@ -44,35 +44,43 @@ class ASRListener implements RecognitionListener {   // {{{
     }
 
     @Override
-    public void onEndOfSpeech() {   
-	A.a();
+    public void onEndOfSpeech() {
+//        A.a();
     }
 
     @Override
     public void onError(int errorCode) {  // A.a();
 
-        A.a( "errorCode:" + errorCode + ", lock:" + parentService.receiveErrorLock);
+//        A.a("errorCode:" + errorCode + ", lock:" + parentService.receiveErrorLock);
 
         if (parentService.receiveErrorLock == false) {
-
+//            A.a();
             if (isErrorLock(errorCode)) {
-
+//                A.a();
                 parentService.receiveErrorLock = true;
 //                parentService.ReStartGoogleASR();
+
+                MyASRService.serviceRunning = false ;
+                Intent it = new Intent(parentService, MyAudioService.class);
+                parentService.startService(it);
+            }
+            else {
+//                A.a();
             }
         }
+//        A.a();
     }
 
     private boolean isErrorLock(int errorCode) {
-        return  ( errorCode == SpeechRecognizer.ERROR_NO_MATCH)        ||
-                (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT)  ||
+        return (errorCode == SpeechRecognizer.ERROR_NO_MATCH) ||
+                (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) ||
                 (errorCode == SpeechRecognizer.ERROR_NETWORK_TIMEOUT) ||
                 (errorCode == SpeechRecognizer.ERROR_NETWORK);
     }
 
     @Override
     public void onResults(Bundle bundle) {
-        A.a( "onResults()");
+//        A.a("onResults()");
         receiveResults(bundle);
     }
 
@@ -88,20 +96,19 @@ class ASRListener implements RecognitionListener {   // {{{
 
 
     private void receiveResults(Bundle results) {   // {{{
-        A.a();
+//        A.a();
 
         if ((results != null) && results.containsKey(SpeechRecognizer.RESULTS_RECOGNITION)) {
 
             List<String> heard = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
 
             if (heard.size() >= 1) {
-                A.a( "spoken words size = " + heard.size() );
+                A.a("spoken words size = " + heard.size());
                 receiveWhatWasHeard(heard);
                 parentService.ReStartGoogleASR();
             }
-        }
-        else {
-            A.a();
+        } else {
+//            A.a();
         }
     }   // }}}
 
@@ -110,10 +117,10 @@ class ASRListener implements RecognitionListener {   // {{{
 
         for (String word : heard) {
 
-            A.a( " 1. word heard = " + word );
+            A.a(" 1. word heard = " + word);
 
-            if ( word.contains( "回首頁"  ) ) {
-                A.a( " command 回首頁 is heard. ");
+            if (word.contains("回首頁")) {
+//                A.a(" command 回首頁 is heard. ");
                 goHomeLauncher();
                 return;
             }

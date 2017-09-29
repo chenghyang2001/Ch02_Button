@@ -15,6 +15,7 @@ import java.util.TimerTask;
 
 public class MyAudioService extends Service {
 
+    public static Boolean serviceAudioRunning = false;
     private MediaRecorder mediaRecorder = null;
     private Timer timer = null;
     private MyQueue<Integer> queueVolume = new MyQueue<Integer>(4);
@@ -50,26 +51,7 @@ public class MyAudioService extends Service {
     public void onCreate() {
         super.onCreate();
         A.a();
-        // init queue
-        queueVolume.add(0);
-        queueVolume.add(0);
-        queueVolume.add(0);
-        queueVolume.add(0);
 
-        // init timer
-        if (timer == null) {
-            timer = new Timer();
-        }
-
-
-        // init mediaRecorder
-        if (mediaRecorder == null) {
-            mediaRecorder = new MediaRecorder();
-        }
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        mediaRecorder.setOutputFile("/dev/null");
 
 
     }
@@ -81,6 +63,7 @@ public class MyAudioService extends Service {
         // stop timer
         if (timer != null) {
             timer.cancel();
+            timer = null;
         }
 
         // release media recorder resource
@@ -90,6 +73,8 @@ public class MyAudioService extends Service {
             mediaRecorder = null;
         }
 
+        MyAudioService.serviceAudioRunning = false;
+
         super.onDestroy();
     }
 
@@ -97,21 +82,40 @@ public class MyAudioService extends Service {
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         A.a();
-        // start timer interval task
-        if (timer != null) {
-            timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 50);
+
+        serviceAudioRunning = true;
+
+        // init queue
+        queueVolume.add(0);
+        queueVolume.add(0);
+        queueVolume.add(0);
+        queueVolume.add(0);
+        // init mediaRecorder
+        if (mediaRecorder == null) {
+            mediaRecorder = new MediaRecorder();
         }
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mediaRecorder.setOutputFile("/dev/null");
 
-        //
+
+
+        // init timer
+        if (timer == null) {
+            timer = new Timer();
+        }
+//        timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 100);
+        timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 50);
+
         try {
-
-            if ( mediaRecorder != null ) {
-                mediaRecorder.prepare();
-                mediaRecorder.start();
-            }
+            mediaRecorder.prepare();
+            mediaRecorder.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
 
     @Override
@@ -194,13 +198,19 @@ public class MyAudioService extends Service {
                 amplitude = recorder.getMaxAmplitude();
                 amplitudeDb = 20 * Math.log10((double) Math.abs(amplitude));
                 intDb = (int) amplitudeDb;
-                queueVolume.add(intDb);
+
+                if (intDb > 0) {
+                    queueVolume.add(intDb);
+//                    A.a("intDb = " + intDb  + " my asr service is " + MyASRService.serviceRunning );
+                }
 
                 if ((queueVolume.isVolumeLarge() == true) && (MyASRService.serviceRunning == false)) {
                     A.a();
-                    // stop timer and release microphone resource
-                    timer.cancel();
+
+                    MyAudioService.serviceAudioRunning = false;
+
                     if (mediaRecorder != null) {
+                        A.a("22. mediaRecorder = " + mediaRecorder);
                         mediaRecorder.stop();
                         mediaRecorder.release();
                         mediaRecorder = null;
@@ -210,6 +220,11 @@ public class MyAudioService extends Service {
                         Intent intent = new Intent(MyAudioService.this, MyASRService.class);
                         startService(intent);
                     }
+
+                    // stop timer and release microphone resource
+                    timer.cancel();
+                    timer = null;
+
 
                 }
             } else {

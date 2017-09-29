@@ -22,7 +22,7 @@ public class MyASRService extends Service {
 
 
     public MyASRService() {
-        A.a();
+//        A.a();
     }
 
     @Override
@@ -33,20 +33,28 @@ public class MyASRService extends Service {
 
     @Override
     public void onStart(Intent intent, int startId) {
-        A.a();
+//        A.a();
         serviceRunning = true;
 
+//        A.a( "1. speechRecognizer =  " + speechRecognizer + "  2. recognizerIntent = " + recognizerIntent );
+
         if ( ( speechRecognizer == null ) && ( recognizerIntent == null  )) {
+//            A.a();
             initASR();
+//            A.a();
+            ReStartGoogleASR();
+//            A.a();
+        } else {
+//            A.a();
             ReStartGoogleASR();
         }
-
+//        A.a();
         super.onStart(intent, startId);
     }
 
     @Override
     public void onDestroy() {
-        A.a();
+//        A.a();
         serviceRunning = false;
 
         if ( (speechRecognizer != null) && (recognizerIntent != null) ) {
