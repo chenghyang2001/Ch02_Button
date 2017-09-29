@@ -18,7 +18,9 @@ public class MyBootReceiver extends BroadcastReceiver {
 
         m_context = context ;
         Intent it = new Intent(context, MyAudioService.class);
-        context.startService(it);
+
+        // TODO: 20170929 peter. comment it out today for developing. enable it on release.
+//        context.startService(it);
 
 
     }

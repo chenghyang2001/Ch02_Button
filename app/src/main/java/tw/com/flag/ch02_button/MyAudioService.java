@@ -98,11 +98,17 @@ public class MyAudioService extends Service {
         super.onStart(intent, startId);
         A.a();
         // start timer interval task
-        timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 50);
+        if (timer != null) {
+            timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 50);
+        }
+
         //
         try {
-            mediaRecorder.prepare();
-            mediaRecorder.start();
+
+            if ( mediaRecorder != null ) {
+                mediaRecorder.prepare();
+                mediaRecorder.start();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
