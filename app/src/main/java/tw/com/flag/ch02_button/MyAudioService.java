@@ -17,7 +17,7 @@ public class MyAudioService extends Service {
 
     private MediaRecorder mediaRecorder = null;
     private Timer timer = null;
-    private MyQueue2<Integer> queueVolume = new MyQueue2<Integer>(4);
+    private MyQueue<Integer> queueVolume = new MyQueue<Integer>(4);
 
     public class LocalBinder extends Binder {
         MyAudioService getService() {
@@ -120,11 +120,11 @@ public class MyAudioService extends Service {
         return super.stopService(name);
     }
 
-    public class MyQueue2<K> extends ArrayList<K> {
+    public class MyQueue<K> extends ArrayList<K> {
 
         private int maxSize;
 
-        public MyQueue2(int size) {
+        public MyQueue(int size) {
             this.maxSize = size;
         }
 

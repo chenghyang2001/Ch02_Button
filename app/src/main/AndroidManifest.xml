@@ -49,22 +49,19 @@
         </activity>
 
         <service android:name=".MyASRService" />
+        <service android:name=".MyAudioService" android:enabled="true" />
 
-
-        <receiver
-            android:name=".MyBootReceiver"
-            >
-
+        <receiver android:name=".MyBootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-
-
         </receiver>
 
-        <service android:name=".MyAudioService" android:enabled="true" />
 
 
     </application>
 
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 </manifest>
