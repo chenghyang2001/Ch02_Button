@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">Wistron Recorder</string>
-    <!--<string name="app_name">Ch02_Button</string>-->
+    <string name="app_name">Wistron AR Service</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

@@ -1,14 +1,9 @@
 package tw.com.flag.ch02_button;
-// TODO: because this service does not use bindservice and unbindservice. thus I plan to remove
-// Binder and onBind, onUnbind related codes. verify if there is any side-effect.
-// also since onStart() is depricated, place the code on OnStartCommand(). result should the same.
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.media.MediaRecorder;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.support.annotation.Nullable;
 
 import java.io.IOException;
@@ -20,13 +15,12 @@ public class MyAudioService extends Service {
 
     public static Boolean serviceAudioRunning = false;
     private       MediaRecorder mediaRecorder = null;
-    private                       Timer timer = null;
+    private               Timer         timer = null;
     private      MyQueue<Integer> queueVolume = new MyQueue<Integer>(4);
 
     public MyAudioService() {
         A.a("in MyAudioService constructor ");
     }
-
 
     @Override
     public void onCreate() {
@@ -35,35 +29,6 @@ public class MyAudioService extends Service {
 
 
     }
-
-    @Override
-    public void onDestroy() {
-        A.a();
-
-        // stop timer
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-
-        // release media recorder resource
-        if (mediaRecorder != null) {
-            mediaRecorder.stop();
-            mediaRecorder.release();
-            mediaRecorder = null;
-        }
-
-        MyAudioService.serviceAudioRunning = false;
-
-        super.onDestroy();
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -101,6 +66,33 @@ public class MyAudioService extends Service {
         return START_STICKY;
     }
 
+    @Override
+    public void onDestroy() {
+        A.a();
+
+        // stop timer
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+
+        // release media recorder resource
+        if (mediaRecorder != null) {
+            mediaRecorder.stop();
+            mediaRecorder.release();
+            mediaRecorder = null;
+        }
+
+        MyAudioService.serviceAudioRunning = false;
+
+        super.onDestroy();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
     public class MyQueue<K> extends ArrayList<K> {
 
@@ -148,7 +140,6 @@ public class MyAudioService extends Service {
             return get(0);
         }
     }
-
 
     public class RecorderTask extends TimerTask {
 
@@ -202,4 +193,6 @@ public class MyAudioService extends Service {
             }
         }
     }
+
+
 }

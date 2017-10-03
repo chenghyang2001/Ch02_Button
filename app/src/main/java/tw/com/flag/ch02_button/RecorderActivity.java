@@ -30,7 +30,8 @@ public class RecorderActivity extends Activity {
         mContext = getApplicationContext();
 
         A.a("111");
-        A.a("111");
+        A.a("222");
+        A.a("333");
 
         // Record Button
         recoButn.setOnClickListener(new View.OnClickListener() {
