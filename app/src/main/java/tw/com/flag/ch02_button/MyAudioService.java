@@ -1,12 +1,15 @@
 package tw.com.flag.ch02_button;
-
+// TODO: because this service does not use bindservice and unbindservice. thus I plan to remove
+// Binder and onBind, onUnbind related codes. verify if there is any side-effect.
+// also since onStart() is depricated, place the code on OnStartCommand(). result should the same.
 
 import android.app.Service;
-import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaRecorder;
-import android.os.Binder;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.support.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,42 +19,19 @@ import java.util.TimerTask;
 public class MyAudioService extends Service {
 
     public static Boolean serviceAudioRunning = false;
-    private MediaRecorder mediaRecorder = null;
-    private Timer timer = null;
-    private MyQueue<Integer> queueVolume = new MyQueue<Integer>(4);
-
-    public class LocalBinder extends Binder {
-        MyAudioService getService() {
-            return MyAudioService.this;
-        }
-    }
-
-    private LocalBinder mLocBin = new LocalBinder();
-
+    private       MediaRecorder mediaRecorder = null;
+    private                       Timer timer = null;
+    private      MyQueue<Integer> queueVolume = new MyQueue<Integer>(4);
 
     public MyAudioService() {
         A.a("in MyAudioService constructor ");
-
-
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        A.a();
-        return mLocBin;
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        A.a();
-        return super.onUnbind(intent);
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
         A.a();
-
 
 
     }
@@ -78,9 +58,16 @@ public class MyAudioService extends Service {
         super.onDestroy();
     }
 
+    @Nullable
     @Override
-    public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
         A.a();
 
         serviceAudioRunning = true;
@@ -99,13 +86,10 @@ public class MyAudioService extends Service {
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         mediaRecorder.setOutputFile("/dev/null");
 
-
-
         // init timer
         if (timer == null) {
             timer = new Timer();
         }
-//        timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 100);
         timer.scheduleAtFixedRate(new RecorderTask(mediaRecorder), 0, 50);
 
         try {
@@ -114,21 +98,9 @@ public class MyAudioService extends Service {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
+        return START_STICKY;
     }
 
-    @Override
-    public ComponentName startService(Intent service) {
-        A.a();
-        return super.startService(service);
-    }
-
-    @Override
-    public boolean stopService(Intent name) {
-        A.a();
-        return super.stopService(name);
-    }
 
     public class MyQueue<K> extends ArrayList<K> {
 
@@ -181,15 +153,14 @@ public class MyAudioService extends Service {
     public class RecorderTask extends TimerTask {
 
         private MediaRecorder recorder = null;
-        private int amplitude = 0;
-        private double amplitudeDb = 0;
-        private int intDb = 0;
+        private          int amplitude = 0;
+        private     double amplitudeDb = 0;
+        private              int intDb = 0;
 
         public RecorderTask(MediaRecorder recorder) {
             A.a();
             this.recorder = recorder;
         }
-
 
         @Override
         public void run() {
@@ -225,15 +196,10 @@ public class MyAudioService extends Service {
                     timer.cancel();
                     timer = null;
 
-
                 }
             } else {
                 A.a("Media Recorder is null ");
             }
-
-
         }
     }
-
-
 }
