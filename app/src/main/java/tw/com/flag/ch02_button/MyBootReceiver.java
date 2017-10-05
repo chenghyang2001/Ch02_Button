@@ -12,15 +12,18 @@ public class MyBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        A.a("111 Action: " + intent.getAction());
+//        A.a("111 Action: " + intent.getAction());
+//        Toast.makeText(context, "111", Toast.LENGTH_SHORT).show();
 
-        Toast.makeText(context, "111111", Toast.LENGTH_SHORT).show();
+        A.a("222 Action: " + intent.getAction());
+        Toast.makeText(context, "222", Toast.LENGTH_SHORT).show();
+
 
         m_context = context ;
         Intent it = new Intent(context, MyAudioService.class);
 
         // TODO: 20170929 peter. comment it out today for developing. enable it on release.
-//        context.startService(it);
+        context.startService(it);
 
 
     }

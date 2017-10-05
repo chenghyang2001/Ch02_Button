@@ -14,6 +14,12 @@ class ASRListener implements RecognitionListener {   // {{{
 
     private MyASRService parentService = null;
 
+    // TODO: change package name to remove ch02_button.Used to load the 'native-lib' library on application startup.
+    // Todo: To enable the following JNI mechanism
+//    static {
+//        System.loadLibrary("native-lib");
+//    }
+//    public native void goHomeJNI();
 
     public ASRListener(MyASRService asrservice) {
         this.parentService = asrservice;

@@ -18,6 +18,13 @@ android {
     }
     productFlavors {
     }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+
 }
 
 dependencies {
