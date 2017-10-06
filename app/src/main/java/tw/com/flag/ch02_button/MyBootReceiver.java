@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import tw.com.flag.ch02.A;
+
 public class MyBootReceiver extends BroadcastReceiver {
 
     Context m_context ;

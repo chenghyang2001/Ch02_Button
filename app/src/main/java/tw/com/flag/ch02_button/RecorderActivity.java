@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import tw.com.flag.ch02.A;
+
 public class RecorderActivity extends Activity {
 
     private Button recoButn = null;

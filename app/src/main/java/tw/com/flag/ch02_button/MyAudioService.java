@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import tw.com.flag.ch02.A;
+
 public class MyAudioService extends Service {
 
     public static Boolean serviceAudioRunning = false;

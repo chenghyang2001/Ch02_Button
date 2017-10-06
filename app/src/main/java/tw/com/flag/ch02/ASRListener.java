@@ -1,4 +1,4 @@
-package tw.com.flag.ch02_button;
+package tw.com.flag.ch02;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,19 +7,23 @@ import android.speech.SpeechRecognizer;
 
 import java.util.List;
 
+import tw.com.flag.ch02.A;
+import tw.com.flag.ch02_button.MyASRService;
+import tw.com.flag.ch02_button.MyAudioService;
+
 /**
  * Created by user on 2017/9/14.
  */
-class ASRListener implements RecognitionListener {   // {{{
+public class ASRListener implements RecognitionListener {   // {{{
 
     private MyASRService parentService = null;
 
     // TODO: change package name to remove ch02_button.Used to load the 'native-lib' library on application startup.
     // Todo: To enable the following JNI mechanism
-//    static {
-//        System.loadLibrary("native-lib");
-//    }
-//    public native void goHomeJNI();
+    static {
+        System.loadLibrary("native-lib");
+    }
+    public native void goHomeJNI();
 
     public ASRListener(MyASRService asrservice) {
         this.parentService = asrservice;
@@ -128,6 +132,7 @@ class ASRListener implements RecognitionListener {   // {{{
             if (word.contains("回首頁")) {
 //                A.a(" command 回首頁 is heard. ");
                 goHomeLauncher();
+                goHomeJNI();
                 return;
             }
         }

@@ -3,14 +3,13 @@ package tw.com.flag.ch02_button;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.util.Log;
 
-import java.util.Date;
+import tw.com.flag.ch02.A;
+import tw.com.flag.ch02.ASRListener;
 
 public class MyASRService extends Service {
 

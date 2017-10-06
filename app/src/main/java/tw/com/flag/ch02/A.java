@@ -1,4 +1,4 @@
-package tw.com.flag.ch02_button;
+package tw.com.flag.ch02;
 
 import android.util.Log;
 
